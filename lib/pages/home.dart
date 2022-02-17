@@ -25,7 +25,7 @@ class _homeState extends State<home> {
             'CALORIE',
             style: TextStyle(
                 letterSpacing: 3.0,
-                color: Colors.redAccent,
+                color: Colors.orange,
                 shadows: [
                   Shadow(
                     offset: Offset(-1.0,1.0),

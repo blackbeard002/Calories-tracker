@@ -32,7 +32,7 @@ class _indicatorsState extends State<indicators> {
       child: Card(
         elevation: 3.0,
         color: Colors.white,
-        shadowColor: Colors.redAccent,
+        shadowColor: Colors.orange,
 
         child: Column(
           children: [
@@ -48,7 +48,7 @@ class _indicatorsState extends State<indicators> {
                       animation: true,
                       animationDuration: 400,
                       backgroundColor: Colors.grey[350],
-                      progressColor: Colors.redAccent,
+                      progressColor: Colors.orange,
                       lineWidth: 10.0,
                       center: Text(
                         widget.calsConsumed.toString() + '/' + widget.calsTotal.toString() ,
@@ -89,7 +89,7 @@ class _indicatorsState extends State<indicators> {
                       ),
                       style: ElevatedButton.styleFrom(
                           shape: CircleBorder(),
-                          primary: Colors.redAccent
+                          primary: Colors.orange
                       ),
                     ),
                   )
@@ -111,7 +111,7 @@ class _indicatorsState extends State<indicators> {
                       percent: widget.carbsPercent/100,
                       center: Text(widget.carbsPercent.toString() + "%  " + 'Carbs'),
                       barRadius: Radius.circular(20),
-                      progressColor: Colors.redAccent,
+                      progressColor: Colors.orange,
                     ),
                   ),
                   Expanded(
@@ -123,7 +123,7 @@ class _indicatorsState extends State<indicators> {
                       percent: widget.fatsPercent/100,
                       center: Text(widget.fatsPercent.toString() + "%  " + 'Fats'),
                       barRadius: Radius.circular(20),
-                      progressColor: Colors.redAccent,
+                      progressColor: Colors.orange,
                     ),
                   ),
                 ],
@@ -143,7 +143,7 @@ class _indicatorsState extends State<indicators> {
                       percent: widget.proteinPercent/100,
                       center: Text(widget.proteinPercent.toString() + "%  " + 'Protein'),
                       barRadius: Radius.circular(20),
-                      progressColor: Colors.redAccent,
+                      progressColor: Colors.orange,
                     ),
                   ),
                   Expanded(
@@ -155,7 +155,7 @@ class _indicatorsState extends State<indicators> {
                       percent: widget.fibrePercent/100,
                       center: Text(widget.fibrePercent.toString() + "%  " + 'Fibre'),
                       barRadius: Radius.circular(20),
-                      progressColor: Colors.redAccent,
+                      progressColor: Colors.orange,
                     ),
                   ),
                 ],

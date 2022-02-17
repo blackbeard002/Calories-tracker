@@ -1,63 +1,118 @@
-import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'dart:ui';
 
-class datepicker extends StatefulWidget {
-  const datepicker({Key? key}) : super(key: key);
+class datePicker extends StatefulWidget {
+  const datePicker({Key key}) : super(key: key);
 
   @override
-  _datepickerState createState() => _datepickerState();
+  _datePickerState createState() => _datePickerState();
 }
+class _datePickerState extends State<datePicker> {
 
-class _datepickerState extends State<datepicker> {
-  late DateTime selectedDate=DateTime.now();
+  @override
+  void initState()
+  {
+    setState(() {
+    });
+  }
+
+  DateTime _dateTime = DateTime.now();
+  DateTime _today = DateTime.now();
+  String _datePicked = 'Today';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-            margin: EdgeInsets.all(40),
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height * 0.25,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  child: Text(selectedDate == DateTime.now() ? "Today" : "$selectedDate"),//Text("Show DatePicker"),
-                  onPressed: () {
-                    showDatePicker();
-                  },
-                ),
-                //Text(selectedDate == null? "" : "$selectedDate")
-              ],
-            )
-        )
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton.icon(
+            onPressed: () {
+              showDatePicker(
+                context: context,
+                initialDate: _dateTime,
+                firstDate: DateTime(2021),
+                lastDate: DateTime.now(),
+                currentDate: DateTime.now(),
+                builder: (BuildContext context, Widget child)
+                {
+                  return Theme(
+                    data: ThemeData.light().copyWith(
+                      colorScheme: ColorScheme.light(
+                        primary: Colors.orange,
+                      ),
+                    ),
+                    child: child,
+                  );
+                },
+              ).then((date){
+                setState(() {
+                  _dateTime = date;
+                  if(date.day == _today.day && date.year == _today.year && date.month == _today.month)
+                  {
+                    _datePicked = 'Today';
+                  }
+                  else{
+                    _datePicked = date.day.toString() + "-" + date.month.toString() + "-" + date.year.toString() + "  " + getDay(date.weekday);
+                  }
+                });
+              }
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              shadowColor: Colors.transparent,
+              elevation: 0.0,
+            ),
+            label: Text(_datePicked,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      offset: Offset(0.0,0.0),
+                      color: Colors.grey,
+                      blurRadius: 6.0,
+                    )
+                  ]
+              ),
+            ),
+            icon: Icon(
+              Icons.calendar_today_outlined,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  void showDatePicker() {
-    showCupertinoModalPopup
-      (
-        context: context,
-        builder: (BuildContext builder) {
-          return Container(
-            height: MediaQuery.of(context).copyWith().size.height*0.25,
-            color: Colors.white,
-            child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.date,
-              onDateTimeChanged: (value) {
-                if (value != selectedDate)
-                  setState(() {
-                    selectedDate = value;
-                  });
-              },
-              initialDateTime: DateTime.now(),
-              minimumYear: 2000,
-              maximumYear: 2050,
-            ),
-          );
-        }
-    );
+  String getDay(int i){
+    print(_dateTime);
+    print(_today);
+    switch(i)
+    {
+      case 1:{
+        return 'Monday';
+      }
+      case 2:{
+        return 'Tuesday';
+      }
+      case 3:{
+        return 'Wednesday';
+      }
+      case 4:{
+        return 'Thursday';
+      }
+      case 5:{
+        return 'Friday';
+      }
+      case 6:{
+        return 'Saturday';
+      }
+      case 7:{
+        return 'Sunday';
+      }
+    }
   }
 }
-
