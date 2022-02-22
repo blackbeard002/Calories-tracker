@@ -18,12 +18,13 @@ class _datePickerState extends State<datePicker> {
 
   DateTime _dateTime = DateTime.now();
   DateTime _today = DateTime.now();
-  String _datePicked = 'Today';
+  String _datePicked = 'Today' ?? 'not defined';
   @override
   Widget build(BuildContext context) {
     return Container(
+
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           ElevatedButton.icon(
             onPressed: () {
@@ -52,7 +53,7 @@ class _datePickerState extends State<datePicker> {
                     _datePicked = 'Today';
                   }
                   else{
-                    _datePicked = date.day.toString() + "-" + date.month.toString() + "-" + date.year.toString() + "  " + getDay(date.weekday);
+                    _datePicked = date.day.toString() + "  " + getDay(date.weekday);
                   }
                 });
               }
@@ -88,30 +89,28 @@ class _datePickerState extends State<datePicker> {
   }
 
   String getDay(int i){
-    print(_dateTime);
-    print(_today);
     switch(i)
     {
       case 1:{
-        return 'Monday';
+        return 'Mon';
       }
       case 2:{
-        return 'Tuesday';
+        return 'Tues';
       }
       case 3:{
-        return 'Wednesday';
+        return 'Wed';
       }
       case 4:{
-        return 'Thursday';
+        return 'Thu';
       }
       case 5:{
-        return 'Friday';
+        return 'Fri';
       }
       case 6:{
-        return 'Saturday';
+        return 'Sat';
       }
       case 7:{
-        return 'Sunday';
+        return 'Sun';
       }
     }
   }

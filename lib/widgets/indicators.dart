@@ -1,7 +1,11 @@
+import 'package:calories_tracker/widgets/searchTest.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'dart:math';
+import 'package:calories_tracker/widgets/hero-dialogue-route.dart';
+import 'package:calories_tracker/widgets/custom-rect-tween.dart';
+
+//import 'package:calories_tracker/widgets/cross_widget_vars.dart';
 
 class indicators extends StatefulWidget {
 
@@ -12,6 +16,7 @@ class indicators extends StatefulWidget {
   double fatsPercent;
   double carbsPercent;
   double proteinPercent;
+  Color primaryColor;
   indicators({Key key,
     final this.calsConsumed,
     final this.calsTotal,
@@ -19,6 +24,7 @@ class indicators extends StatefulWidget {
     this.fatsPercent,
     this.fibrePercent,
     this.proteinPercent,
+    this.primaryColor,
   }) : super(key: key);
 
   @override
@@ -26,14 +32,16 @@ class indicators extends StatefulWidget {
 }
 
 class _indicatorsState extends State<indicators> {
+  double _lineWidth_circ = 7.0;
+  double _lineWidth_line = 10.0;
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Card(
-        elevation: 3.0,
+      child: Material(
+        elevation: 2.0,
         color: Colors.white,
-        shadowColor: Colors.orange,
-
+        shadowColor: Colors.grey,
+        borderRadius: BorderRadius.circular(32.0),
         child: Column(
           children: [
             Padding(
@@ -44,17 +52,15 @@ class _indicatorsState extends State<indicators> {
                   Expanded(
                     flex: 5,
                     child: new CircularPercentIndicator(
-                      radius: 49.0,
+                      radius: 30.0,
                       animation: true,
                       animationDuration: 400,
                       backgroundColor: Colors.grey[350],
-                      progressColor: Colors.orange,
-                      lineWidth: 10.0,
-                      center: Text(
-                        widget.calsConsumed.toString() + '/' + widget.calsTotal.toString() ,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      progressColor: widget.primaryColor,
+                      lineWidth: _lineWidth_circ,
+                      center: Icon(
+                        Icons.fork_left,
+                        size: 30.0,
                       ),
                       //reconnect to widget.calPercent
                       percent: getPercent(widget.calsConsumed.toDouble(), widget.calsTotal.toDouble()),
@@ -62,68 +68,91 @@ class _indicatorsState extends State<indicators> {
                     ),
                   ),
                   Expanded(
-                    flex: 6,
+                    flex: 10,
                     child: Text(
                       'Cals Consumed',
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: 17.0,
-                          shadows: [
-                            Shadow(
-                              offset: Offset(1.0,1.0),
-                              color: Colors.grey[850],
-                              blurRadius: 2.0,
-                            )
-                          ]
+                          fontSize: 15.0,
                       ),
                     ),
 
                   ),
                   Expanded(
-                    flex: 3,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(),
-                          primary: Colors.orange
+                    flex: 5,
+                    child: Hero(
+                      tag: 'hero-search-test',
+                      createRectTween: (begin, end){
+                        return CustomRectTween(begin: begin, end: end);
+                      },
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(HeroDialogRoute(builder: (context) {
+                            return const searchFoods();}));
+                        },
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(),
+                            primary: widget.primaryColor
+                        ),
                       ),
                     ),
                   )
                 ],
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 15),
+            Divider(
+              thickness: 2.0,
+            ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8.0, 15.0, 8.0, 8.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     flex: 5,
-                    child: new LinearPercentIndicator(
-                      animation: true,
-                      lineHeight: 20.0,
-                      animationDuration: 400,
-                      percent: widget.carbsPercent/100,
-                      center: Text(widget.carbsPercent.toString() + "%  " + 'Carbs'),
-                      barRadius: Radius.circular(20),
-                      progressColor: Colors.orange,
+                    child: Column(
+                      children: [
+                        Text(widget.carbsPercent.toString() + "%  " + 'Carbs',
+                          style: TextStyle(
+                            fontSize: 12.0,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                        new LinearPercentIndicator(
+                          animation: true,
+                          lineHeight: _lineWidth_line,
+                          animationDuration: 400,
+                          percent: widget.carbsPercent/100,
+                          barRadius: Radius.circular(20),
+                          progressColor: widget.primaryColor,
+                        ),
+                      ],
                     ),
                   ),
                   Expanded(
                     flex: 5,
-                    child: new LinearPercentIndicator(
-                      animation: true,
-                      lineHeight: 20.0,
-                      animationDuration: 400,
-                      percent: widget.fatsPercent/100,
-                      center: Text(widget.fatsPercent.toString() + "%  " + 'Fats'),
-                      barRadius: Radius.circular(20),
-                      progressColor: Colors.orange,
+                    child: Column(
+                      children: [
+                        Text(widget.fatsPercent.toString() + "%  " + 'Fats',
+                          style: TextStyle(
+                            fontSize: 12.0,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                        new LinearPercentIndicator(
+                          animation: true,
+                          lineHeight: _lineWidth_line,
+                          animationDuration: 400,
+                          percent: widget.fatsPercent/100,
+                          barRadius: Radius.circular(20),
+                          progressColor: widget.primaryColor,
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -132,30 +161,48 @@ class _indicatorsState extends State<indicators> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     flex: 5,
-                    child: new LinearPercentIndicator(
-                      animation: true,
-                      lineHeight: 20.0,
-                      animationDuration: 400,
-                      percent: widget.proteinPercent/100,
-                      center: Text(widget.proteinPercent.toString() + "%  " + 'Protein'),
-                      barRadius: Radius.circular(20),
-                      progressColor: Colors.orange,
+                    child: Column(
+                      children: [
+                        Text(widget.proteinPercent.toString() + "%  " + 'Protein',
+                          style: TextStyle(
+                            fontSize: 12.0,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                        new LinearPercentIndicator(
+                          animation: true,
+                          lineHeight: _lineWidth_line,
+                          animationDuration: 400,
+                          percent: widget.proteinPercent/100,
+                          barRadius: Radius.circular(20),
+                          progressColor: widget.primaryColor,
+                        ),
+                      ],
                     ),
                   ),
                   Expanded(
                     flex: 5,
-                    child: new LinearPercentIndicator(
-                      animation: true,
-                      lineHeight: 20.0,
-                      animationDuration: 400,
-                      percent: widget.fibrePercent/100,
-                      center: Text(widget.fibrePercent.toString() + "%  " + 'Fibre'),
-                      barRadius: Radius.circular(20),
-                      progressColor: Colors.orange,
+                    child: Column(
+                      children: [
+                        Text(widget.fibrePercent.toString() + "%  " + 'Fibre',
+                          style: TextStyle(
+                            fontSize: 12.0,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                        new LinearPercentIndicator(
+                          animation: true,
+                          lineHeight: _lineWidth_line,
+                          animationDuration: 400,
+                          percent: widget.fibrePercent/100,
+                          barRadius: Radius.circular(20),
+                          progressColor: widget.primaryColor,
+                        ),
+                      ],
                     ),
                   ),
                 ],
