@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   percent_indicator: ^4.0.0
   syncfusion_flutter_datepicker: ^19.4.52
+  mysql1: ^0.19.2
 
 dev_dependencies:
   flutter_test:

@@ -1,11 +1,9 @@
-import 'package:calories_tracker/widgets/searchTest.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:calories_tracker/widgets/hero-dialogue-route.dart';
 import 'package:calories_tracker/widgets/custom-rect-tween.dart';
-
-//import 'package:calories_tracker/widgets/cross_widget_vars.dart';
+import 'package:calories_tracker/pages/search_food.dart';
 
 class indicators extends StatefulWidget {
 
@@ -88,7 +86,7 @@ class _indicatorsState extends State<indicators> {
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-                            return const searchFoods();}));
+                            return const searchfood();}));
                         },
                         child: Icon(
                           Icons.add,

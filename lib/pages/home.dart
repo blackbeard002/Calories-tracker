@@ -63,13 +63,6 @@ class _homeState extends State<home> {
                   waterConsumed: 70,
                   primaryColor: Colors.orange[800],
                 ),
-
-                /*ElevatedButton(
-                  onPressed: (){
-                    printTest();
-                  },
-                ),*/
-
               ],
             ),
           ),
