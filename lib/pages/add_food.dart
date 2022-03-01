@@ -1,6 +1,7 @@
 import 'package:calories_tracker/widgets/circle_display.dart';
 import 'package:flutter/material.dart';
 import 'package:calories_tracker/widgets/scrolling_list_picker.dart';
+import 'package:mysql1/mysql1.dart';
 
 class addfood extends StatefulWidget {
   String foodName;
@@ -15,30 +16,49 @@ class addfood extends StatefulWidget {
 
 class _addfoodState extends State<addfood> {
   //ignore
-  final ValueNotifier <List<String>> _weightUnit = ValueNotifier(['100','Gm']);
+  final ValueNotifier <List<String>> _weightUnit = ValueNotifier(['100','grams']);
   String? foodName;
   String? foodImageUrl;
   List? defaultWeights;
   List? defaultUnits;
-  void dbConnection()
-  {
-    //database code goes here B)
 
-    //just setting some dummy values to make widget work #ignore
-    foodName = widget.foodName;
-    foodImageUrl = 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=louis-hansel-onxjrr3Erwc-unsplash.jpg&w=1920';
-    defaultWeights = [100,200,350,400,500];
-    defaultUnits = ['Gm', 'Oz'];
+  double carb=0,fat=0,protein=0,fibres=0,calo=0;
+
+  void dbconnection() async {
+    var settings=new ConnectionSettings(
+        host: "caloriestracker.cule8a3xeym9.ap-south-1.rds.amazonaws.com",
+        port: 3306,
+        user: 'admin',
+        password: 'calories_o2',
+        db: 'CALORIES_TRACKER'
+    );
+    var conn= await MySqlConnection.connect(settings);
+
+    var res=await conn.query('select * from MACROS where food=?',[foodName]);
+    await conn.close();
+    for(var row in res)
+      {
+        calo=row[1];
+        fat=row[2];
+        carb=row[3];
+        protein=row[4];
+        fibres=row[5];
+      }
+    setState(() {
+
+    });
   }
 
   @override
   void initState() {
 
     super.initState();
-    //calls DB connection
-    //set all values in dbConnection
-    dbConnection();
-    setState(() {});
+
+    defaultWeights = [100,200,350,400,500];
+    defaultUnits = ['grams', 'oz'];
+    foodName = widget.foodName;
+    foodImageUrl = 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=louis-hansel-onxjrr3Erwc-unsplash.jpg&w=1920';
+    dbconnection();
   }
 
   @override
@@ -114,27 +134,31 @@ class _addfoodState extends State<addfood> {
   }
   List<String> calcMacros(List<String> s)
   {
+
     //weight and unit are set
-    double weight = double.parse(s[0]);
+    double? weight = double.parse(s[0]);
     String unit = s[1];
-    double carb, protein, fats, fibre;
+    double? carbs, proteins, fats, fibre,calories;
 
-    //doo math here
+    //convert weight into grams
+    (unit=="oz")?weight=weight*28.34:weight=weight;
 
-    //setting dummy values for now
-    carb = weight - 10.0;
-    fats = weight - 35.0;
-    protein = weight - 25.0;
-    fibre = weight - 15.0;
+    //calculating the constant
+    weight=(weight/100);
+
+    //calculating macros values
+    calories = double.parse((weight * calo).toStringAsFixed(0));
+    fats = double.parse((weight * fat).toStringAsFixed(1));
+    carbs = double.parse((weight * carb).toStringAsFixed(1));
+    proteins = double.parse((weight * protein).toStringAsFixed(1));
+    fibre = double.parse((weight * fibres).toStringAsFixed(1));
     List<String> returnList;
 
-    //data list indexes
-    //[0] : carbs macro value
-    //[1] : fats macro value
-    //[2] : protein macro value
-    //[3] : fibre macro value
+    //todo:display calories value in the UI
+    print("calories:$calories");
 
-    return returnList = ['$carb','$fats','$protein', '$fibre'];
+    return returnList = ['$carbs','$fats','$proteins', '$fibre'];
+
   }
 }
 

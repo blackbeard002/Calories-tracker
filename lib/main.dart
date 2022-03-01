@@ -5,6 +5,7 @@ import 'package:calories_tracker/pages/search_food.dart';
 import 'package:calories_tracker/pages/add_food.dart';
 
 void main() => runApp(MaterialApp(
+      initialRoute: '/searchfood',
       routes: {
         '/': (context) => home(),
         '/searchfood' : (context) => searchfood(),
