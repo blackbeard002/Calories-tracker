@@ -2,10 +2,11 @@ import 'package:calories_tracker/widgets/water.dart';
 import 'package:flutter/material.dart';
 import 'package:calories_tracker/widgets/heatMapInvoker.dart';
 import 'package:calories_tracker/widgets/indicators.dart';
-import 'package:calories_tracker/widgets/cross_widget_vars.dart';
+import 'package:calories_tracker/widgets/session_widget.dart';
+import 'package:flutter/services.dart';
 
 class home extends StatefulWidget {
-  const home({Key key}) : super(key: key);
+  const home({Key? key}) : super(key: key);
 
   @override
   _homeState createState() => _homeState();
@@ -13,19 +14,18 @@ class home extends StatefulWidget {
 
 class _homeState extends State<home> {
 
-
-  crossWidgetVars _transporter = crossWidgetVars(
-    //default vars, consider this the initialization funciton
+  sessionTracker _session = sessionTracker(
+    //default vars, consider this the initialization function
     //dump the vars you need for setting initial values here
-    //declare the variables you need in cross_widget_vars.dart and initialize them in constructor
+    //declare the variables you need in session_widget.dart and initialize them in constructor
     //here is where you set the default values from user to reflect UI
 
     //for now this class only tracks Date var between widgets
-    selectedDate: DateTime.now(),
 
+    selectedDate: DateTime.now(),
   );
 
-  void printTest(){print(_transporter.selectedDate.toString());}
+  void printTest(){print(_session.selectedDate.toString());}
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +37,11 @@ class _homeState extends State<home> {
           backgroundColor: Colors.white,
           elevation: 0.0,
           title: heatMapInvoker(
-            transporter: _transporter,
+            session_: _session,
           ),
           centerTitle: false,
+          systemOverlayStyle: SystemUiOverlayStyle(
+          ),
         ),
 
         body:
@@ -48,6 +50,7 @@ class _homeState extends State<home> {
           child: SafeArea(
             child: Column(
               children: [
+
                 indicators(
                   calsTotal: 3000,
                   calsConsumed: 950,

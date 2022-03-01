@@ -1,13 +1,12 @@
-import 'package:calories_tracker/widgets/hero-dialogue-route.dart';
-import 'package:calories_tracker/widgets/custom-rect-tween.dart';
+import 'package:calories_tracker/widgets/hero_dialogue_route.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:calories_tracker/widgets/cross_widget_vars.dart';
+import 'package:calories_tracker/widgets/session_widget.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
 class heatMapInvoker extends StatefulWidget {
-  crossWidgetVars transporter;
-  heatMapInvoker({Key key, this.transporter}) : super(key: key);
+  sessionTracker session_;
+  heatMapInvoker({Key? key, required this.session_}) : super(key: key);
   @override
   _heatMapInvokerState createState() => _heatMapInvokerState();
 }
@@ -16,12 +15,17 @@ class _heatMapInvokerState extends State<heatMapInvoker> {
 
   //vars
   DateTime _dateThrownBack = DateTime.now();
-  String _buttonText = 'Today' ?? 'no info';
+  String _buttonText = 'Today';
 
   void getDateFromHeatmap(BuildContext context) async{
-    _dateThrownBack = await Navigator.of(context).push(HeroDialogRoute(builder: (context){ return const heatmap(); }));
+    _dateThrownBack = await Navigator.of(context).push(HeroDialogRoute(
+      builder: (context){ return const heatmap();},
+      settings: RouteSettings(),
+    ));
     setState(() {
-      widget.transporter.selectedDate = _dateThrownBack;
+
+      //setting session variable selectedDate
+      widget.session_.selectedDate = _dateThrownBack;
       _buttonText = generateButtonText();
     });
   }
@@ -34,9 +38,6 @@ class _heatMapInvokerState extends State<heatMapInvoker> {
         children: [
           Hero(
             tag: 'show-calender',
-            createRectTween: (begin, end){
-              return CustomRectTween(begin: begin, end: end);
-            },
 
             child: ElevatedButton.icon(
               onPressed: () {
@@ -75,7 +76,7 @@ class _heatMapInvokerState extends State<heatMapInvoker> {
   //nothing special, just doing some string operations for button text, ignore
   String generateButtonText()
   {
-    String day = '' ?? 'No Day Selected';
+    String day = 'Sun';
     switch(_dateThrownBack.weekday)
     {
       case 1:{
@@ -114,7 +115,7 @@ class _heatMapInvokerState extends State<heatMapInvoker> {
 }
 
 class heatmap extends StatefulWidget {
-  const heatmap({Key key}) : super(key: key);
+  const heatmap({Key? key}) : super(key: key);
 
   @override
   _heatmapState createState() => _heatmapState();
@@ -133,9 +134,6 @@ class _heatmapState extends State<heatmap> {
         padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 30.0),
         child: Hero(
           tag: 'show-calender',
-          createRectTween: (begin, end){
-            return CustomRectTween(begin: begin, end: end);
-          },
           child: SingleChildScrollView(
             child:Material(
               color: Colors.white,
@@ -160,7 +158,7 @@ class _heatmapState extends State<heatmap> {
                         showActionButtons: true,
                         selectionColor: Colors.orange[800],
                         todayHighlightColor: Colors.orange[800],
-                        onSubmit: (Object value) {
+                        onSubmit: (value) {
                           Navigator.pop(context,value);
                         }
                       ),

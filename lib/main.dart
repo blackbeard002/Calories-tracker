@@ -8,7 +8,7 @@ void main() => runApp(MaterialApp(
       routes: {
         '/': (context) => home(),
         '/searchfood' : (context) => searchfood(),
-        '/addfood': (context) => addfood(),
+        '/addfood': (context) => addfood(foodName: '',),
         '/date' : (context) => heatmap(),
       },
     )

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:calories_tracker/widgets/hero-dialogue-route.dart';
-import 'package:calories_tracker/widgets/custom-rect-tween.dart';
-import 'package:calories_tracker/pages/search_food.dart';
+
+
+
 
 class indicators extends StatefulWidget {
 
@@ -14,15 +14,15 @@ class indicators extends StatefulWidget {
   double fatsPercent;
   double carbsPercent;
   double proteinPercent;
-  Color primaryColor;
-  indicators({Key key,
-    final this.calsConsumed,
-    final this.calsTotal,
-    this.carbsPercent,
-    this.fatsPercent,
-    this.fibrePercent,
-    this.proteinPercent,
-    this.primaryColor,
+  Color? primaryColor;
+  indicators({Key? key,
+    required this.calsConsumed,
+    required this.calsTotal,
+    required this.carbsPercent,
+    required this.fatsPercent,
+    required this.fibrePercent,
+    required this.proteinPercent,
+    required this.primaryColor,
   }) : super(key: key);
 
   @override
@@ -53,7 +53,7 @@ class _indicatorsState extends State<indicators> {
                       radius: 30.0,
                       animation: true,
                       animationDuration: 400,
-                      backgroundColor: Colors.grey[350],
+                      backgroundColor: Colors.grey,
                       progressColor: widget.primaryColor,
                       lineWidth: _lineWidth_circ,
                       center: Icon(
@@ -80,13 +80,10 @@ class _indicatorsState extends State<indicators> {
                     flex: 5,
                     child: Hero(
                       tag: 'hero-search-test',
-                      createRectTween: (begin, end){
-                        return CustomRectTween(begin: begin, end: end);
-                      },
+
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-                            return const searchfood();}));
+                          Navigator.pushNamed(context, '/searchfood');
                         },
                         child: Icon(
                           Icons.add,

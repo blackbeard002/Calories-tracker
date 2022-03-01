@@ -3,11 +3,11 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class water extends StatefulWidget {
   double waterConsumed;
-  Color primaryColor;
+  Color? primaryColor;
   water({
-    Key key,
-    this.waterConsumed,
-    this.primaryColor
+    Key? key,
+    required this.waterConsumed,
+    required this.primaryColor
   }) : super(key: key);
 
   @override
@@ -37,7 +37,7 @@ class _waterState extends State<water> {
                     animation: true,
                     animationDuration: 400,
                     percent: widget.waterConsumed/100,
-                    backgroundColor: Colors.grey[350],
+                    backgroundColor: Colors.grey,
                     progressColor: widget.primaryColor,
                     circularStrokeCap: CircularStrokeCap.round,
                     center: Icon(
