@@ -32,6 +32,7 @@ dependencies:
   syncfusion_flutter_datepicker: ^19.4.52
   infinite_listview: ^1.1.0
   mysql1: ^0.19.2
+  shared_preferences: ^2.0.13
 
 dev_dependencies:
   flutter_test:

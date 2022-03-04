@@ -94,7 +94,7 @@ class _listPickerState extends State<listPicker> {
                   fesc.animateToItem(1, duration: Duration(milliseconds: 200), curve: Curves.easeIn)
                 }
                 else{
-                  print('poo')
+
                 }
               },
               child: ListWheelScrollView(
@@ -170,6 +170,5 @@ class _listPickerState extends State<listPicker> {
     currentlySelected = s;
     //add code to update it to super
     widget.onChange(currentlySelected);
-    print('changed to $s');
   }
 }

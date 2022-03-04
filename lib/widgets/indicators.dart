@@ -1,10 +1,8 @@
+import 'package:calories_tracker/pages/search_food.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
-
-
-
+import 'package:calories_tracker/widgets/hero_dialogue_route.dart';
 class indicators extends StatefulWidget {
 
   //for text of widgets
@@ -35,177 +33,234 @@ class _indicatorsState extends State<indicators> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Material(
-        elevation: 2.0,
-        color: Colors.white,
-        shadowColor: Colors.grey,
-        borderRadius: BorderRadius.circular(32.0),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(5.0, 20.0, 5.0, 0.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: new CircularPercentIndicator(
-                      radius: 30.0,
-                      animation: true,
-                      animationDuration: 400,
-                      backgroundColor: Colors.grey,
-                      progressColor: widget.primaryColor,
-                      lineWidth: _lineWidth_circ,
-                      center: Icon(
-                        Icons.fork_left,
-                        size: 30.0,
-                      ),
-                      //reconnect to widget.calPercent
-                      percent: getPercent(widget.calsConsumed.toDouble(), widget.calsTotal.toDouble()),
-                      circularStrokeCap: CircularStrokeCap.round,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(32)),
+          boxShadow: [
+            BoxShadow(
+                offset: Offset.zero,
+                color: Colors.grey,
+                spreadRadius: 1.0,
+                blurRadius: 9.0
+            ),
+          ]
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(5.0, 20.0, 5.0, 0.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: new CircularPercentIndicator(
+                    radius: 30.0,
+                    animation: true,
+                    animationDuration: 400,
+                    backgroundColor: Colors.grey,
+                    progressColor: widget.primaryColor,
+                    lineWidth: _lineWidth_circ,
+                    center: Icon(
+                      Icons.favorite,
+                      size: 26.0,
                     ),
+                    //reconnect to widget.calPercent
+                    percent: getPercent(widget.calsConsumed.toDouble(), widget.calsTotal.toDouble()),
+                    circularStrokeCap: CircularStrokeCap.round,
                   ),
-                  Expanded(
-                    flex: 10,
-                    child: Text(
-                      'Cals Consumed',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15.0,
-                      ),
-                    ),
+                ),
+                Expanded(
+                    flex: 9,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '1450/3000',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        SizedBox(height: 3,),
+                        Text(
+                          'Cals Consumed',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.normal
+                          ),
+                        ),
+                      ],
+                    )
 
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Hero(
-                      tag: 'hero-search-test',
-
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/searchfood');
-                        },
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.white,
+                ),
+                Expanded(
+                    flex: 2,
+                    child: GestureDetector(
+                      onTap: (){
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [Colors.purpleAccent, Colors.purple],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              stops: [0.0, 0.7],
+                            )
                         ),
-                        style: ElevatedButton.styleFrom(
-                            shape: CircleBorder(),
-                            primary: widget.primaryColor
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon(
+                            Icons.bar_chart,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(height: 15),
-            Divider(
-              thickness: 2.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 15.0, 8.0, 8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
+                    )
+                ),
+                Expanded(
                     flex: 5,
-                    child: Column(
-                      children: [
-                        Text(widget.carbsPercent.toString() + "%  " + 'Carbs',
-                          style: TextStyle(
-                            fontSize: 12.0,
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(HeroDialogRoute(builder: (context){return searchfood();},
+                            settings: RouteSettings())
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [Colors.purpleAccent, Colors.purple],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              stops: [0.0, 0.7],
+                            )
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon(
+                            Icons.add,
+                            color: Colors.white,
                           ),
-                          textAlign: TextAlign.left,
                         ),
-                        new LinearPercentIndicator(
-                          animation: true,
-                          lineHeight: _lineWidth_line,
-                          animationDuration: 400,
-                          percent: widget.carbsPercent/100,
-                          barRadius: Radius.circular(20),
-                          progressColor: widget.primaryColor,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      children: [
-                        Text(widget.fatsPercent.toString() + "%  " + 'Fats',
-                          style: TextStyle(
-                            fontSize: 12.0,
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-                        new LinearPercentIndicator(
-                          animation: true,
-                          lineHeight: _lineWidth_line,
-                          animationDuration: 400,
-                          percent: widget.fatsPercent/100,
-                          barRadius: Radius.circular(20),
-                          progressColor: widget.primaryColor,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                      ),
+                    )
+                )
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      children: [
-                        Text(widget.proteinPercent.toString() + "%  " + 'Protein',
-                          style: TextStyle(
-                            fontSize: 12.0,
-                          ),
-                          textAlign: TextAlign.left,
+          ),
+          SizedBox(height: 15),
+          Divider(
+            thickness: 2.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 15.0, 8.0, 8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    children: [
+                      Text(widget.carbsPercent.toString() + "%  " + 'Carbs',
+                        style: TextStyle(
+                          fontSize: 12.0,
                         ),
-                        new LinearPercentIndicator(
-                          animation: true,
-                          lineHeight: _lineWidth_line,
-                          animationDuration: 400,
-                          percent: widget.proteinPercent/100,
-                          barRadius: Radius.circular(20),
-                          progressColor: widget.primaryColor,
-                        ),
-                      ],
-                    ),
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(height: 3.0,),
+                      new LinearPercentIndicator(
+                        animation: true,
+                        lineHeight: _lineWidth_line,
+                        animationDuration: 400,
+                        percent: widget.carbsPercent/100,
+                        barRadius: Radius.circular(20),
+                        progressColor: widget.primaryColor,
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      children: [
-                        Text(widget.fibrePercent.toString() + "%  " + 'Fibre',
-                          style: TextStyle(
-                            fontSize: 12.0,
-                          ),
-                          textAlign: TextAlign.left,
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    children: [
+                      Text(widget.fatsPercent.toString() + "%  " + 'Fats',
+                        style: TextStyle(
+                          fontSize: 12.0,
                         ),
-                        new LinearPercentIndicator(
-                          animation: true,
-                          lineHeight: _lineWidth_line,
-                          animationDuration: 400,
-                          percent: widget.fibrePercent/100,
-                          barRadius: Radius.circular(20),
-                          progressColor: widget.primaryColor,
-                        ),
-                      ],
-                    ),
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(height: 3.0,),
+                      new LinearPercentIndicator(
+                        animation: true,
+                        lineHeight: _lineWidth_line,
+                        animationDuration: 400,
+                        percent: widget.fatsPercent/100,
+                        barRadius: Radius.circular(20),
+                        progressColor: widget.primaryColor,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            SizedBox(height: 20.0,)
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    children: [
+                      Text(widget.proteinPercent.toString() + "%  " + 'Protein',
+                        style: TextStyle(
+                          fontSize: 12.0,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(height: 3.0,),
+                      new LinearPercentIndicator(
+                        animation: true,
+                        lineHeight: _lineWidth_line,
+                        animationDuration: 400,
+                        percent: widget.proteinPercent/100,
+                        barRadius: Radius.circular(20),
+                        progressColor: widget.primaryColor,
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    children: [
+                      Text(widget.fibrePercent.toString() + "%  " + 'Fibre',
+                        style: TextStyle(
+                          fontSize: 12.0,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(height: 3.0,),
+                      new LinearPercentIndicator(
+                        animation: true,
+                        lineHeight: _lineWidth_line,
+                        animationDuration: 400,
+                        percent: widget.fibrePercent/100,
+                        barRadius: Radius.circular(20),
+                        progressColor: widget.primaryColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20.0,)
+        ],
       ),
     );
   }

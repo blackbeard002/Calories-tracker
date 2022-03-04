@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:calories_tracker/pages/home.dart';
 import 'package:calories_tracker/pages/search_food.dart';
 import 'package:calories_tracker/pages/add_food.dart';
+import 'package:calories_tracker/pages/flash_screen.dart';
 
 void main() => runApp(MaterialApp(
-      initialRoute: '/searchfood',
+      //initialRoute: '/searchfood',
       routes: {
-        '/': (context) => home(),
+        '/' : (context) => flashscreen(),
+        '/home': (context) => home(),
         '/searchfood' : (context) => searchfood(),
         '/addfood': (context) => addfood(foodName: '',),
         '/date' : (context) => heatmap(),

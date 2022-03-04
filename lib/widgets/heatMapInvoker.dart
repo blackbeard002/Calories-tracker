@@ -18,12 +18,13 @@ class _heatMapInvokerState extends State<heatMapInvoker> {
   String _buttonText = 'Today';
 
   void getDateFromHeatmap(BuildContext context) async{
+
     _dateThrownBack = await Navigator.of(context).push(HeroDialogRoute(
       builder: (context){ return const heatmap();},
       settings: RouteSettings(),
     ));
-    setState(() {
 
+    setState(() {
       //setting session variable selectedDate
       widget.session_.selectedDate = _dateThrownBack;
       _buttonText = generateButtonText();
@@ -32,43 +33,41 @@ class _heatMapInvokerState extends State<heatMapInvoker> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Hero(
-            tag: 'show-calender',
-
-            child: ElevatedButton.icon(
-              onPressed: () {
-                getDateFromHeatmap(context);
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.white,
-                shadowColor: Colors.transparent,
-                elevation: 0.0,
-              ),
-              label: Text(_buttonText,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(0.0,0.0),
-                        color: Colors.grey,
-                        blurRadius: 6.0,
-                      )
-                    ]
-                ),
-              ),
-              icon: Icon(
-                Icons.calendar_today_outlined,
-                color: Colors.black,
-              ),
-            ),
+    return Hero(
+      tag: 'show-calender',
+      child: GestureDetector(
+        onTap: (){
+          getDateFromHeatmap(context);
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width - 280,
+          height: 36,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(32)),
+              gradient: LinearGradient(
+                colors: [Colors.purpleAccent, Colors.purple, ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
           ),
-        ],
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.calendar_today_outlined,
+                color: Colors.white,
+              ),
+              SizedBox(width: 10,),
+              Text(
+                _buttonText,
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -77,6 +76,9 @@ class _heatMapInvokerState extends State<heatMapInvoker> {
   String generateButtonText()
   {
     String day = 'Sun';
+    if(_dateThrownBack.year == DateTime.now().year && _dateThrownBack.day == DateTime.now().day && _dateThrownBack.month == DateTime.now().month){
+      return 'Today';
+    }
     switch(_dateThrownBack.weekday)
     {
       case 1:{
@@ -148,19 +150,24 @@ class _heatmapState extends State<heatmap> {
                     children: [
                       Divider(
                         thickness: 1.0,
-                        color: Colors.orange[800],
+                        color: Colors.purpleAccent,
                       ),
-                      SfDateRangePicker(
-                        onSelectionChanged: on_selectionChanged,
-                        selectionMode: DateRangePickerSelectionMode.single,
-                        initialSelectedDate: DateTime.now(),
-                        maxDate: DateTime.now(),
-                        showActionButtons: true,
-                        selectionColor: Colors.orange[800],
-                        todayHighlightColor: Colors.orange[800],
-                        onSubmit: (value) {
-                          Navigator.pop(context,value);
-                        }
+                      SingleChildScrollView(
+                        child: SfDateRangePicker(
+                          onSelectionChanged: on_selectionChanged,
+                          selectionMode: DateRangePickerSelectionMode.single,
+                          initialSelectedDate: DateTime.now(),
+                          maxDate: DateTime.now(),
+                          showActionButtons: true,
+                          selectionColor: Colors.purpleAccent,
+                          todayHighlightColor: Colors.purpleAccent,
+                          onSubmit: (value) {
+                            Navigator.pop(context,value);
+                          },
+                          onCancel: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
                     ]
                 ),

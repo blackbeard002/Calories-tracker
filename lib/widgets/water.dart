@@ -18,63 +18,82 @@ class _waterState extends State<water> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-      child: Material(
-          elevation: 2.0,
-          color: Colors.white,
-          shadowColor: Colors.grey,
-          borderRadius: BorderRadius.circular(32.0),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(5, 15, 5, 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: new CircularPercentIndicator(
-                    radius: 30.0,
-                    lineWidth: 7.0,
-                    animation: true,
-                    animationDuration: 400,
-                    percent: widget.waterConsumed/100,
-                    backgroundColor: Colors.grey,
-                    progressColor: widget.primaryColor,
-                    circularStrokeCap: CircularStrokeCap.round,
-                    center: Icon(
-                      Icons.emoji_food_beverage,
-                      color: Colors.grey[850],
-                    ),
+      padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(32)),
+            boxShadow: [
+              BoxShadow(
+                  offset: Offset.zero,
+                  color: Colors.grey,
+                  spreadRadius: 1.0,
+                  blurRadius: 9.0
+              ),
+            ]
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(5, 15, 5, 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 5,
+                child: new CircularPercentIndicator(
+                  radius: 30.0,
+                  lineWidth: 7.0,
+                  animation: true,
+                  animationDuration: 400,
+                  percent: widget.waterConsumed/100,
+                  backgroundColor: Colors.grey,
+                  progressColor: widget.primaryColor,
+                  circularStrokeCap: CircularStrokeCap.round,
+                  center: Icon(
+                    Icons.emoji_food_beverage,
+                    color: Colors.grey[850],
+                  ),
 
+                ),
+              ),
+              Expanded(
+                flex: 10,
+                child: Text(
+                  'Water Consumed',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15.0,
                   ),
                 ),
-                Expanded(
-                  flex: 10,
-                  child: Text(
-                    'Water Consumed',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
+              ),
 
-                Expanded(
+              Expanded(
                   flex: 5,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                      primary: widget.primaryColor,
+                  child: GestureDetector(
+                    onTap: (){
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: [Colors.purpleAccent, Colors.purple],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            stops: [0.0, 0.7],
+                          )
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
-                  ),
-                )
-              ],
-            ),
+                  )
+              )
+            ],
           ),
+        ),
       ),
     );
   }
