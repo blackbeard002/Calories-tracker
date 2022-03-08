@@ -80,7 +80,7 @@ class _addfoodState extends State<addfood> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 15.0),
                     child: Text(
-                      foodName ?? 'name not found',
+                      widget.foodName,
                       style: TextStyle(
                         fontSize: 17.0,
                       ),
@@ -132,6 +132,7 @@ class _addfoodState extends State<addfood> {
       ),
     );
   }
+
   List<String> calcMacros(List<String> s)
   {
 

@@ -21,8 +21,10 @@ class _flashscreenState extends State<flashscreen> {
         alignment: Alignment.center,
         child: GestureDetector(
           onTap: () async {
-            await checkFirst.firstRun();
-            Navigator.of(context).pushNamed('/home');
+            if(await checkFirst.firstRun()){
+              Navigator.of(context).pushNamed('/loginReg');
+            }
+            else{Navigator.of(context).pushNamed('/loginReg');}
           },
           child: Material(
             color: Colors.blue,
@@ -37,18 +39,14 @@ class _flashscreenState extends State<flashscreen> {
 class checkFirst
 {
   static const firstLaunchKey = 'first_launch';
-
-  static Future<void> firstCall() async{
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    sp.setBool(firstLaunchKey, false);
-  }
-  static Future<void> firstRun() async{
+  static Future<bool> firstRun() async{
     SharedPreferences sp = await SharedPreferences.getInstance();
     bool isFirst = await sp.getBool(firstLaunchKey) ?? true;
+
     if(isFirst){
-      //first run so set bool in firstCall
-      await firstCall();
+      return true;
       //Todo:create database here
     }
+    else{return false;}
   }
 }

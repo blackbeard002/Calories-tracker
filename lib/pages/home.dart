@@ -47,6 +47,7 @@ class _homeState extends State<home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topLeft,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class userInfo extends StatefulWidget {
   const userInfo({Key? key}) : super(key: key);
@@ -8,6 +9,12 @@ class userInfo extends StatefulWidget {
 }
 
 class _userInfoState extends State<userInfo> {
+  String name = 'No Name';
+  @override
+  void initState()  {
+    super.initState();
+    getName();
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -38,7 +45,7 @@ class _userInfoState extends State<userInfo> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Hi DikFace',
+                  Text('Hi ' + name,
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 19.0,
@@ -69,5 +76,10 @@ class _userInfoState extends State<userInfo> {
         )
       ),
     );
+  }
+  Future<void> getName() async
+  {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    name = sp.getString('uname') ?? 'no name';
   }
 }
