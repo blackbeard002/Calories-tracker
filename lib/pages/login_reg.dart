@@ -85,6 +85,7 @@ class _loginFormState extends State<loginForm> {
                 errorText = null;
                 SharedPreferences sp = await SharedPreferences.getInstance();
                 sp.setBool('first_launch', false);
+                sp.setString('uname', uname);
                 sp.setString('uid', uid);
                 //todo: read below
                 //get the user's actual name from DB and store it locally as well
@@ -194,7 +195,7 @@ class _registerFormState extends State<registerForm> {
     //check validate if the uid variable is unique in the database
     //if unique then insert into the db and return true, the rest is taken care.
     //else return false, and the error text will pop up automatically
-
+    
     if(un.length > 5){return true;}
     else{return false;}
   }

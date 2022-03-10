@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:calories_tracker/widgets/hero_dialogue_route.dart';
-class indicators extends StatefulWidget {
 
+typedef RebuildHome<T> = void Function();
+
+class indicators extends StatefulWidget {
   //for text of widgets
   int calsTotal;
   int calsConsumed;
@@ -12,6 +14,8 @@ class indicators extends StatefulWidget {
   double fatsPercent;
   double carbsPercent;
   double proteinPercent;
+  DateTime selectedDate;
+  RebuildHome<void> rebuildHome;
   Color? primaryColor;
   indicators({Key? key,
     required this.calsConsumed,
@@ -20,6 +24,8 @@ class indicators extends StatefulWidget {
     required this.fatsPercent,
     required this.fibrePercent,
     required this.proteinPercent,
+    required this.selectedDate,
+    required this.rebuildHome,
     required this.primaryColor,
   }) : super(key: key);
 
@@ -31,7 +37,12 @@ class _indicatorsState extends State<indicators> {
   double _lineWidth_circ = 7.0;
   double _lineWidth_line = 10.0;
   @override
+  void initState() {
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
+    //print(widget.selectedDate);
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -76,7 +87,7 @@ class _indicatorsState extends State<indicators> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '1450/3000',
+                          widget.calsConsumed.toString() + '/' + widget.calsTotal.toString(),
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 15.0,
@@ -100,6 +111,7 @@ class _indicatorsState extends State<indicators> {
                     flex: 2,
                     child: GestureDetector(
                       onTap: (){
+                        Navigator.of(context).pushNamed('/edit');
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -124,10 +136,8 @@ class _indicatorsState extends State<indicators> {
                 Expanded(
                     flex: 5,
                     child: GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).push(HeroDialogRoute(builder: (context){return searchfood();},
-                            settings: RouteSettings())
-                        );
+                      onTap: () {
+                         searchAdd(context);
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -268,5 +278,13 @@ class _indicatorsState extends State<indicators> {
   double getPercent(double c, double t)
   {
     return ((c/t)*10)/10;
+  }
+
+  void searchAdd(BuildContext context) async{
+    final value = await Navigator.of(context).push(HeroDialogRoute(
+        builder: (context){
+          return searchfood(selectedDate: widget.selectedDate,);
+        }, settings: RouteSettings()));
+    widget.rebuildHome(); print('value received');
   }
 }

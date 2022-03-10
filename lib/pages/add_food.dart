@@ -5,9 +5,11 @@ import 'package:mysql1/mysql1.dart';
 
 class addfood extends StatefulWidget {
   String foodName;
+  DateTime selectedDate;
   addfood({
     Key? key,
     required this.foodName,
+    required this.selectedDate
   }) : super(key: key);
 
   @override
@@ -63,6 +65,7 @@ class _addfoodState extends State<addfood> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.selectedDate);
     return Container(
       child: Hero(
         tag: 'quantity',

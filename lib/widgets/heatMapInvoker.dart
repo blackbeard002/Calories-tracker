@@ -1,12 +1,16 @@
 import 'package:calories_tracker/widgets/hero_dialogue_route.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:calories_tracker/widgets/session_widget.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
+typedef UpdateDate<T> = void Function(T value);
+
 class heatMapInvoker extends StatefulWidget {
-  sessionTracker session_;
-  heatMapInvoker({Key? key, required this.session_}) : super(key: key);
+  UpdateDate<DateTime> updateDate;
+  heatMapInvoker({
+    Key? key,
+    required this.updateDate,
+  }) : super(key: key);
   @override
   _heatMapInvokerState createState() => _heatMapInvokerState();
 }
@@ -18,7 +22,6 @@ class _heatMapInvokerState extends State<heatMapInvoker> {
   String _buttonText = 'Today';
 
   void getDateFromHeatmap(BuildContext context) async{
-
     _dateThrownBack = await Navigator.of(context).push(HeroDialogRoute(
       builder: (context){ return const heatmap();},
       settings: RouteSettings(),
@@ -26,7 +29,8 @@ class _heatMapInvokerState extends State<heatMapInvoker> {
 
     setState(() {
       //setting session variable selectedDate
-      widget.session_.selectedDate = _dateThrownBack;
+      //widget.session_.selectedDate = _dateThrownBack;
+      widget.updateDate(_dateThrownBack);
       _buttonText = generateButtonText();
     });
   }
@@ -137,11 +141,11 @@ class _heatmapState extends State<heatmap> {
         child: Hero(
           tag: 'show-calender',
           child: SingleChildScrollView(
-            child:Material(
-              color: Colors.white,
-              elevation: 5.0,
-              shadowColor: Colors.grey,
-              borderRadius: BorderRadius.circular(20.0),
+            child:Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(32),
+              ),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(6.0, 20.0, 6.0, 6.0),
                 child: Column(
@@ -152,22 +156,20 @@ class _heatmapState extends State<heatmap> {
                         thickness: 1.0,
                         color: Colors.purpleAccent,
                       ),
-                      SingleChildScrollView(
-                        child: SfDateRangePicker(
-                          onSelectionChanged: on_selectionChanged,
-                          selectionMode: DateRangePickerSelectionMode.single,
-                          initialSelectedDate: DateTime.now(),
-                          maxDate: DateTime.now(),
-                          showActionButtons: true,
-                          selectionColor: Colors.purpleAccent,
-                          todayHighlightColor: Colors.purpleAccent,
-                          onSubmit: (value) {
-                            Navigator.pop(context,value);
-                          },
-                          onCancel: () {
-                            Navigator.pop(context);
-                          },
-                        ),
+                      SfDateRangePicker(
+                        onSelectionChanged: on_selectionChanged,
+                        selectionMode: DateRangePickerSelectionMode.single,
+                        initialSelectedDate: DateTime.now(),
+                        maxDate: DateTime.now(),
+                        showActionButtons: true,
+                        selectionColor: Colors.purpleAccent,
+                        todayHighlightColor: Colors.purpleAccent,
+                        onSubmit: (value) {
+                          Navigator.pop(context,value);
+                        },
+                        onCancel: () {
+                          Navigator.pop(context);
+                        },
                       ),
                     ]
                 ),

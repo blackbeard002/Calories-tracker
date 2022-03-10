@@ -1,3 +1,4 @@
+import 'package:calories_tracker/pages/edit_page.dart';
 import 'package:calories_tracker/pages/login_reg.dart';
 import 'package:calories_tracker/widgets/heatMapInvoker.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +12,10 @@ void main() => runApp(MaterialApp(
       routes: {
         '/' : (context) => flashscreen(),
         '/loginReg': (context) => loginPage(),
+        '/edit' : (context) => editDelegate(),
         '/home': (context) => home(),
-        '/searchfood' : (context) => searchfood(),
-        '/addfood': (context) => addfood(foodName: '',),
+        '/searchfood' : (context) => searchfood(selectedDate: DateTime.now(),),
+        '/addfood': (context) => addfood(foodName: '', selectedDate: DateTime.now(),),
         '/date' : (context) => heatmap(),
       },
     )

@@ -1,8 +1,8 @@
+import 'dart:math';
 import 'package:calories_tracker/widgets/water.dart';
 import 'package:flutter/material.dart';
 import 'package:calories_tracker/widgets/heatMapInvoker.dart';
 import 'package:calories_tracker/widgets/indicators.dart';
-import 'package:calories_tracker/widgets/session_widget.dart';
 import 'package:calories_tracker/widgets/user_info.dart';
 import 'package:flutter/services.dart';
 
@@ -14,24 +14,22 @@ class home extends StatefulWidget {
 }
 
 class _homeState extends State<home> {
+
   late  SnackBar exitConfirm;
-  sessionTracker _session = sessionTracker(
-    //default vars, consider this the initialization function
-    //dump the vars you need for setting initial values here
-    //declare the variables you need in session_widget.dart and initialize them in constructor
-    //here is where you set the default values from user to reflect UI
+  final ValueNotifier<int> rebuildInd = ValueNotifier(2);
+  Random rng = Random(23);
+  DateTime currentDate = DateTime.now();
 
-    //for now this class only tracks Date var between widgets
-
-    selectedDate: DateTime.now(),
-  );
-
-  void printTest(){print(_session.selectedDate.toString());}
+  //indicator variables
+  int? totalCals, calsConsumed;
+  double? carbs, fats, proteins, fibre;
+  int defaultInt = 300;
+  double defaultDouble = 34;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    updateHome();
     exitConfirm = SnackBar(
       content: Text('Are you sure exit?'),
       action: SnackBarAction(
@@ -97,17 +95,30 @@ class _homeState extends State<home> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
-                              child: heatMapInvoker(session_: _session),
+                              child: heatMapInvoker(
+                                updateDate: (newDate)
+                                {setState(() {currentDate = newDate; rebuildInd.value = rng.nextInt(10);  updateHome();});},
+                              ),
                             ),
-                            indicators(
-                              calsTotal: 3000,
-                              calsConsumed: 1045,
-                              carbsPercent: 35,
-                              fatsPercent: 56,
-                              proteinPercent: 66,
-                              fibrePercent: 56,
-                              primaryColor: Colors.purple[400],
+                            ValueListenableBuilder(
+                              valueListenable: rebuildInd,
+                              builder: (BuildContext context, int val, Widget? child){
+                                return indicators(
+                                  selectedDate: currentDate,
+                                  calsTotal: totalCals ?? defaultInt,
+                                  calsConsumed: calsConsumed ?? defaultInt,
+                                  carbsPercent: carbs ?? defaultDouble,
+                                  fatsPercent:fats ?? defaultDouble,
+                                  proteinPercent: proteins ?? defaultDouble,
+                                  fibrePercent: fibre ?? defaultDouble,
+                                  primaryColor: Colors.purple[400],
+                                  rebuildHome: () {
+                                    updateHome();
+                                  },
+                                );
+                              }
                             ),
+
                             water(
                               waterConsumed: 40,
                               primaryColor: Colors.purple[400],
@@ -133,6 +144,26 @@ class _homeState extends State<home> {
   {
     ScaffoldMessenger.of(context).showSnackBar(exitConfirm);
     return false;
+  }
+
+  Future<void> updateHome() async
+  {
+    // feeding dummy data for now below
+    // ignore and delete after adding database code here
+    // todo: do database tomfuckery here
+    // set values to these variables like before
+
+    calsConsumed = rng.nextInt(2000);
+    totalCals = 3000;
+    fats = 20; carbs = 25; fibre = 25; proteins = 35;
+
+
+
+    
+    // leave this next line alone
+    // it is responsible for updating the widget
+    //always should be called last
+    rebuildInd.value = rng.nextInt(34);
   }
 }
 

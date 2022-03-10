@@ -24,7 +24,7 @@ class _flashscreenState extends State<flashscreen> {
             if(await checkFirst.firstRun()){
               Navigator.of(context).pushNamed('/loginReg');
             }
-            else{Navigator.of(context).pushNamed('/loginReg');}
+            else{Navigator.of(context).pushNamed('/home');}
           },
           child: Material(
             color: Colors.blue,

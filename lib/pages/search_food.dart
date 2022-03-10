@@ -6,7 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:mysql1/mysql1.dart';
 
 class searchfood extends StatefulWidget {
-  const searchfood({Key? key}) : super(key: key);
+  DateTime selectedDate;
+  searchfood({
+    Key? key,
+    required this.selectedDate,
+  }) : super(key: key);
 
   @override
   _searchfoodState createState() => _searchfoodState();
@@ -102,6 +106,7 @@ class _searchfoodState extends State<searchfood> with SingleTickerProviderStateM
                             autofocus: false,
                             onChanged: (val)
                             {
+                              //print(widget.selectedDate);
                               setState(() {
                                 food=val;
                                 dbconnection();
@@ -131,7 +136,7 @@ class _searchfoodState extends State<searchfood> with SingleTickerProviderStateM
                       child: Column(
                           children: [
                             if(fname==food && fname!='')
-                              suggestion(foodName: fname,)
+                              suggestion(foodName: fname, selectedDate: DateTime.now(),)
                           ]
                       ),
                     ),
@@ -159,11 +164,12 @@ class _searchfoodState extends State<searchfood> with SingleTickerProviderStateM
 
 class suggestion extends StatefulWidget {
   String foodName = '';
+  DateTime selectedDate;
   suggestion({
     //suggestion variables
     Key? key,
-    required this.foodName
-
+    required this.foodName,
+    required this.selectedDate,
   }) : super(key: key);
 
   @override
@@ -202,7 +208,7 @@ class _suggestionState extends State<suggestion> {
                     onTap: (){
                       Navigator.of(context).push(HeroDialogRoute(
                         // moving to add_food carrying only food name
-                          builder: (context){return addfood(foodName: widget.foodName,);},
+                          builder: (context){return addfood(foodName: widget.foodName, selectedDate: widget.selectedDate,);},
                           settings: RouteSettings())
                       );
                     },
