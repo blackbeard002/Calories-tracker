@@ -20,11 +20,17 @@ class editEntry extends StatefulWidget {
 }
 
 class _editEntryState extends State<editEntry> {
-
   bool enableEdit = false;
   bool removed = false;
   double? widthAC;
   double? heightAC = 100.0;
+  String weigh = '1';
+  @override
+  void initState() {
+    super.initState();
+    weigh = widget.weight;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -65,7 +71,7 @@ class _editEntryState extends State<editEntry> {
                       ),
 
                       Expanded(
-                        child: Text(widget.weight + ' gm'),
+                        child: Text(weigh + ' gm'),
                       ),
 
                       //literally the widget that enables editing
@@ -74,7 +80,7 @@ class _editEntryState extends State<editEntry> {
                         onTap: (){
                           setState(() {
                             if(enableEdit){heightAC = 100.0;}
-                            else{heightAC = 250.0;}
+                            else{heightAC = 220.0;}
                           });
                         },
                         child: Container(
@@ -129,14 +135,19 @@ class _editEntryState extends State<editEntry> {
                   ),
                 ),
                 SizedBox(height: 5.0,),
+
                 Divider(height: 20.0, color: Colors.grey,),
+
                 Container(
                   alignment: Alignment.center,
                   child: enableEdit ?editNumbers(
-                    weightToEdit: widget.weight,
+                    weightToEdit: weigh,
                     onChange: (conDeny, newVal){
                       setState(() {
                         if(conDeny){
+                          setState(() {
+                            weigh = newVal;
+                          });
                           heightAC = 100;
                         }
                         else{
@@ -170,51 +181,112 @@ class editNumbers extends StatefulWidget {
 }
 
 class _editNumbersState extends State<editNumbers> {
+  late TextEditingController thisEdit;
   String newValue = 'none';
+
+  @override
+  void initState() {
+    super.initState();
+    thisEdit = new TextEditingController();
+    thisEdit.text = widget.weightToEdit;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FittedBox(
       child: SingleChildScrollView(
         child: Container(
-          color: Colors.orange,
+          color: Colors.white,
           child: Column(
             children: [
+
+
+
+              //text edit field
               Container(
-                width: 150,
+                width: 100,
                 child: TextField(
+                  keyboardType: TextInputType.number,
+                  key: UniqueKey(),
+                  controller: thisEdit,
+                  decoration: InputDecoration(
+                  ),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                  ),
                   onChanged: (value){
                     newValue = value;
                   },
                 ),
               ),
+
+
               SizedBox(height: 30),
+
+
               Container(
                 width: MediaQuery.of(context).size.width - 60,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextButton(
-                        onPressed: (){
-                          widget.onChange(false, newValue);
-                        },
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                              color: Colors.white
+
+
+                    TextButton.icon(
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)
                           ),
-                        )
+                          side: BorderSide(
+                              width: 0.2,
+                              color: Colors.red
+                          )
+                      ),
+                      onPressed: (){
+                        widget.onChange(false, newValue);
+                      },
+                      icon: Icon(
+                        Icons.close_sharp,
+                        color: Colors.redAccent,
+                      ),
+                      label: Text(
+                        'Cancel',
+                        style: TextStyle(
+                            color: Colors.redAccent
+                        ),
+                      ),
                     ),
-                    TextButton(
+
+
+                    TextButton.icon(
+                      style: TextButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        side: BorderSide(
+                          width: 0.2,
+                          color: Colors.green
+                        )
+                      ),
                         onPressed: (){
                           widget.onChange(true, newValue);
                         },
-                        child: Text(
+                        label: Text(
                           'Save',
                           style: TextStyle(
-                              color: Colors.white
+                              color: Colors.green
                           ),
-                        )
+                        ),
+                      icon: Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      ),
                     ),
+
+
                   ],
                 ),
               )

@@ -13,10 +13,10 @@ class _userInfoState extends State<userInfo> {
   @override
   void initState()  {
     super.initState();
-    getName();
   }
   @override
   Widget build(BuildContext context) {
+    getName();
     return Padding(
       padding: const EdgeInsets.fromLTRB(5.0, 40.0, 5.0, 41.0),
       child: Container(

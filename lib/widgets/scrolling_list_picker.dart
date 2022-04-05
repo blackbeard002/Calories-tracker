@@ -7,6 +7,7 @@ typedef tracker<T> = void Function(T value);
 class listPicker extends StatefulWidget {
 
   List scrollList;
+  String heading;
   Color? budColor = Colors.orange;
   Color? textColor = Colors.black;
   tracker<String> onChange;
@@ -15,6 +16,7 @@ class listPicker extends StatefulWidget {
     required this.onChange,
     required this.scrollList,
     required this.isInput,
+    required this.heading,
     this.budColor,
     this.textColor,
   }) : super(key: key);
@@ -52,62 +54,81 @@ class _listPickerState extends State<listPicker> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Stack(
-        fit: StackFit.loose,
-        alignment: Alignment.center,
+      child: Column(
         children: [
-          IgnorePointer(
-            child: Material(
-
-              child: SizedBox(width: 120.0, height: 50,),
-              borderRadius: BorderRadius.circular(32),
-              color: widget.budColor,
-              shadowColor: Colors.black,
-              elevation: 5.0,
+          Text(widget.heading,
+            style: TextStyle(
+              fontSize: 16,
+              shadows: [Shadow(
+                color: Colors.grey,
+                blurRadius: 5,
+                offset: Offset.fromDirection(0.5)
+              )]
             ),
           ),
-
-          IgnorePointer(
-            child: Row(
-              children: [
-                Icon(Icons.arrow_right,
-                  size: 30.0,
-                  color: Colors.white,
+          SizedBox(height: 5,),
+          Stack(
+            fit: StackFit.loose,
+            alignment: Alignment.center,
+            children: [
+              IgnorePointer(
+                child: Container(
+                  child: SizedBox(width: 100.0, height: 30,),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(32)),
+                      gradient: LinearGradient(
+                          colors: [Colors.purple, Colors.purpleAccent],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight
+                      )
+                  ),
                 ),
-                SizedBox(width: 60,),
-                Icon(Icons.arrow_left,
-                  size: 30.0,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            width: 100.0,
-            height: 130.0,
-            child: GestureDetector(
-              onTap: () => {
-                if(widget.isInput){
-                  customFocus.requestFocus(),
-                  inputControl.text = '',
-                  fesc.animateToItem(1, duration: Duration(milliseconds: 200), curve: Curves.easeIn)
-                }
-                else{
-
-                }
-              },
-              child: ListWheelScrollView(
-                controller: fesc,
-                physics: FixedExtentScrollPhysics(),
-                children: widget.isInput ? getInteractableList() : getConstList(),
-                itemExtent: 55,
-                onSelectedItemChanged: (index) {
-                  updateCurrentlySelected(widget.scrollList[index].toString());
-                },
               ),
-            )
-          ),
+
+              IgnorePointer(
+                child: Row(
+                  children: [
+                    Icon(Icons.arrow_drop_down,
+                      size: 30.0,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 40,),
+                    Icon(Icons.arrow_drop_up,
+                      size: 30.0,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+              ),
+
+              Container(
+                  width: 100.0,
+                  height: 110.0,
+                  child: GestureDetector(
+                    onTap: () => {
+                      if(widget.isInput){
+                        customFocus.requestFocus(),
+                        inputControl.text = '',
+                        fesc.animateToItem(1, duration: Duration(milliseconds: 200), curve: Curves.easeIn)
+                      }
+                      else{
+
+                      }
+                    },
+                    child: ListWheelScrollView(
+                      controller: fesc,
+                      diameterRatio: 1.5,
+                      physics: FixedExtentScrollPhysics(),
+                      children: widget.isInput ? getInteractableList() : getConstList(),
+                      itemExtent: 45,
+                      onSelectedItemChanged: (index) {
+                        updateCurrentlySelected(widget.scrollList[index].toString());
+                      },
+                    ),
+                  )
+              ),
+            ],
+          )
         ],
       )
     );
@@ -118,7 +139,7 @@ class _listPickerState extends State<listPicker> {
     List<Widget>scrollView = List.generate(widget.scrollList.length, (index) =>
       Container(
         width: 80,
-        height: 55,
+        height: 45,
         alignment: Alignment.center,
         child: index == 0 ? TextField(
           maxLength: 3,
@@ -126,7 +147,7 @@ class _listPickerState extends State<listPicker> {
           controller: inputControl,
           focusNode: customFocus,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 22.0),
+          style: TextStyle(fontSize: 18.0),
           decoration: InputDecoration(
             border: InputBorder.none,
             counterText: ''
@@ -139,11 +160,12 @@ class _listPickerState extends State<listPicker> {
         ) : Text(
           widget.scrollList[index].toString(),
           style: TextStyle(
-            fontSize: 22.0
+            fontSize: 18.0,
           ),
         ),
       )
     );
+    widget.onChange(widget.scrollList[0].toString());
     return scrollView;
   }
   List<Widget> getConstList()
@@ -151,17 +173,18 @@ class _listPickerState extends State<listPicker> {
     List<Widget>scrollView = List.generate(widget.scrollList.length, (index) =>
       Container(
         width: 80,
-        height: 55,
+        height: 45,
         alignment: Alignment.center,
         child: Text(
           widget.scrollList[index].toString(),
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 22.0
+            fontSize: 18.0
           ),
         ),
       )
     );
+    widget.onChange(widget.scrollList[0].toString());
     return scrollView;
   }
 

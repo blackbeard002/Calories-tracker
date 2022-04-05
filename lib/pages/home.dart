@@ -97,7 +97,7 @@ class _homeState extends State<home> {
                               padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
                               child: heatMapInvoker(
                                 updateDate: (newDate)
-                                {setState(() {currentDate = newDate; rebuildInd.value = rng.nextInt(10);  updateHome();});},
+                                {setState(() {currentDate = newDate; print(currentDate); rebuildInd.value = rng.nextInt(10);  updateHome();});},
                               ),
                             ),
                             ValueListenableBuilder(

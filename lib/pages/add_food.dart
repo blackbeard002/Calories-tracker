@@ -19,13 +19,14 @@ class addfood extends StatefulWidget {
 class _addfoodState extends State<addfood> {
   //ignore
   final ValueNotifier <List<String>> _weightUnit = ValueNotifier(['100','grams']);
+
+  List<String> foodRets = ['0','0','0','0','0','0','0','0'];
   String? foodName;
   String? foodImageUrl;
   List? defaultWeights;
   List? defaultUnits;
 
   double carb=0,fat=0,protein=0,fibres=0,calo=0;
-
   void dbconnection() async {
     var settings=new ConnectionSettings(
         host: "caloriestracker.cule8a3xeym9.ap-south-1.rds.amazonaws.com",
@@ -55,22 +56,21 @@ class _addfoodState extends State<addfood> {
   void initState() {
 
     super.initState();
-
     defaultWeights = [100,200,350,400,500];
-    defaultUnits = ['grams', 'oz'];
+    defaultUnits = ['gm', 'oz'];
     foodName = widget.foodName;
     foodImageUrl = 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=louis-hansel-onxjrr3Erwc-unsplash.jpg&w=1920';
+    foodRets[0] = widget.foodName;
     dbconnection();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.selectedDate);
     return Container(
       child: Hero(
         tag: 'quantity',
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(32, 80, 32, 80),
+          padding: const EdgeInsets.fromLTRB(32, 80, 32, 90),
           child: Material(
             elevation: 2.0,
             shape: RoundedRectangleBorder(
@@ -78,53 +78,93 @@ class _addfoodState extends State<addfood> {
             ),
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 15.0),
-                    child: Text(
-                      widget.foodName,
-                      style: TextStyle(
-                        fontSize: 17.0,
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(32),
+                          topRight: Radius.circular(32)
+                        ),
+                        child: Image.network(
+                          foodImageUrl ?? '',
+                          fit: BoxFit.fill,
+                          scale: 1.0,
+                        ),
                       ),
-                    ),
-                  ),
-                  Image.network(
-                    foodImageUrl ?? '',
-                    fit: BoxFit.fill,
+                      Positioned(
+                        child: Text(widget.foodName.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black,
+                              blurRadius: 4,
+                              offset: Offset.fromDirection(1),
+                            )
+                          ]
+                        ),),
+                        bottom: 10,
+                        left: 10,
+                      )
+                    ],
                   ),
 
-                  SizedBox(height: 30,),
+                  SizedBox(height: 12),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       listPicker(
+                        heading: 'Pick Quantity',
                         isInput: true,
                         scrollList: defaultWeights ?? ['df','df'],
                         budColor: Colors.orange,
                         textColor: Colors.black,
                         onChange: (val) {
                           _weightUnit.value[0] = val;
+
+                          foodRets[1] = val.toString();
+
                           _weightUnit.notifyListeners();
                         },
                       ),
+                      SizedBox(width: 20,),
                       listPicker(
+                        heading: 'Pick unit',
                         isInput: false,
                         scrollList: defaultUnits ?? ['df','df'],
-                        budColor: Colors.orange,
+                        budColor: Colors.purple,
                         onChange: (val) {
                           _weightUnit.value[1] = val;
+
+                          foodRets[2] = val.toString();
+
                           _weightUnit.notifyListeners();
                         },
                       ),
                     ],
                   ),
-                  SizedBox(height: 30,),
+
+
+
+                  Divider(thickness: 2,),
+                  SizedBox(height: 15,),
                   ValueListenableBuilder(
                       valueListenable: _weightUnit,
                       builder: (BuildContext context, List<String> value, Widget? child){
                         return macroDisplays(
                           data: calcMacros(value),
+                          finishAdding: (){
+                            foodRets[3] = '$_calories';
+                            foodRets[4] = '$_carbs';
+                            foodRets[5] = '$_fats';
+                            foodRets[6] = '$_proteins';
+                            foodRets[7] = '$_fibre';
+                            Navigator.pop(context, foodRets);
+                          },
                         );
                       }),
                 ],
@@ -136,13 +176,13 @@ class _addfoodState extends State<addfood> {
     );
   }
 
+  double? _carbs, _proteins, _fats, _fibre, _calories;
   List<String> calcMacros(List<String> s)
   {
-
     //weight and unit are set
     double? weight = double.parse(s[0]);
     String unit = s[1];
-    double? carbs, proteins, fats, fibre,calories;
+
 
     //convert weight into grams
     (unit=="oz")?weight=weight*28.34:weight=weight;
@@ -151,18 +191,17 @@ class _addfoodState extends State<addfood> {
     weight=(weight/100);
 
     //calculating macros values
-    calories = double.parse((weight * calo).toStringAsFixed(0));
-    fats = double.parse((weight * fat).toStringAsFixed(1));
-    carbs = double.parse((weight * carb).toStringAsFixed(1));
-    proteins = double.parse((weight * protein).toStringAsFixed(1));
-    fibre = double.parse((weight * fibres).toStringAsFixed(1));
+    _calories = double.parse((weight * calo).toStringAsFixed(0));
+    _fats = double.parse((weight * fat).toStringAsFixed(1));
+    _carbs = double.parse((weight * carb).toStringAsFixed(1));
+    _proteins = double.parse((weight * protein).toStringAsFixed(1));
+    _fibre = double.parse((weight * fibres).toStringAsFixed(1));
     List<String> returnList;
 
     //todo:display calories value in the UI
-    print("calories:$calories");
+    //print("calories:$calories");
 
-    return returnList = ['$carbs','$fats','$proteins', '$fibre'];
-
+    return returnList = ['$_carbs','$_fats','$_proteins', '$_fibre', '$_calories'];
   }
 }
 

@@ -1,9 +1,9 @@
 import 'package:calories_tracker/pages/add_food.dart';
 import 'package:calories_tracker/widgets/hero_dialogue_route.dart';
-import 'package:calories_tracker/widgets/session_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mysql1/mysql1.dart';
+
+typedef InsertFood<T> = void Function(List<String>);
 
 class searchfood extends StatefulWidget {
   DateTime selectedDate;
@@ -17,18 +17,26 @@ class searchfood extends StatefulWidget {
 }
 
 class _searchfoodState extends State<searchfood> with SingleTickerProviderStateMixin{
+
+  //db call variables
   var food="",res,fname="";
+  var conn;
+
+  //anim variables
   double _width = 0.0;
   double _height = 0.0;
   double _radius = 360;
+
+  //text edit variables
   late FocusNode searchBox;
   late TextEditingController searchControl;
-  sessionTracker sessionT = sessionTracker();
 
+  //food tracking variables
+  List<List<String>> foodReturns = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    getConn();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       scaleSearch();
     });
@@ -40,31 +48,23 @@ class _searchfoodState extends State<searchfood> with SingleTickerProviderStateM
     setState(() {
       _width = MediaQuery.of(context).size.width;
       _height = 150;
-      _radius = 50;
+      _radius = 00;
     });
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    conn.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    void dbconnection() async {
-      var settings=new ConnectionSettings(
-          host: "caloriestracker.cule8a3xeym9.ap-south-1.rds.amazonaws.com",
-          port: 3306,
-          user: 'admin',
-          password: 'calories_o2',
-          db: 'CALORIES_TRACKER'
-      );
-      var conn= await MySqlConnection.connect(settings);
-
+    void query() async {
       res=await conn.query('select FOOD from MACROS where food=?',[food]);
       fname=res.toString();
       fname=fname.substring(16,16+food.length);
       fname=fname.toLowerCase();
-      conn.close();
-      if(fname==food)
-      {
-        setState(() {});
-      }
+      if(fname==food) {setState(() {});}
     }
 
     return Scaffold(
@@ -109,7 +109,7 @@ class _searchfoodState extends State<searchfood> with SingleTickerProviderStateM
                               //print(widget.selectedDate);
                               setState(() {
                                 food=val;
-                                dbconnection();
+                                query();
                               });
                             },
                             decoration: InputDecoration(
@@ -123,7 +123,20 @@ class _searchfoodState extends State<searchfood> with SingleTickerProviderStateM
                             ),
                           ),
                           SizedBox(height: 2,),
-                          Chip(onDeleted: (){}, backgroundColor: Colors.white, label: Text('Egg'),),
+
+
+
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            physics: ScrollPhysics(),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: List.generate(foodReturns.length, (index) => Chipper(
+                                name: foodReturns[index][0],
+                                weight: foodReturns[index][1],
+                              ))
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -136,14 +149,21 @@ class _searchfoodState extends State<searchfood> with SingleTickerProviderStateM
                       child: Column(
                           children: [
                             if(fname==food && fname!='')
-                              suggestion(foodName: fname, selectedDate: DateTime.now(),)
+                              suggestion(
+                                foodName: fname,
+                                selectedDate: widget.selectedDate,
+                                insertFood: (List<String> f){
+                                  foodReturns.add(f);
+                                  setState(() {});
+                                },
+                              )
                           ]
                       ),
                     ),
                   ),
                 ),
                 WillPopScope(
-                  child: Text('hello'),
+                  child: Text(''),
                   onWillPop: animateSearchBack,
                 ),
               ]
@@ -157,19 +177,35 @@ class _searchfoodState extends State<searchfood> with SingleTickerProviderStateM
     setState(() {
       _width = 0.0;
       _height = 0.0;
+      print(foodReturns);
+      //food access here
     });
     return true;
+  }
+
+  Future<void> getConn() async
+  {
+    var settings=new ConnectionSettings(
+        host: "caloriestracker.cule8a3xeym9.ap-south-1.rds.amazonaws.com",
+        port: 3306,
+        user: 'admin',
+        password: 'calories_o2',
+        db: 'CALORIES_TRACKER'
+    );
+    conn= await MySqlConnection.connect(settings);
   }
 }
 
 class suggestion extends StatefulWidget {
   String foodName = '';
+  InsertFood<List<String>> insertFood;
   DateTime selectedDate;
   suggestion({
     //suggestion variables
     Key? key,
     required this.foodName,
     required this.selectedDate,
+    required this.insertFood,
   }) : super(key: key);
 
   @override
@@ -191,6 +227,8 @@ class _suggestionState extends State<suggestion> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+
+
             Expanded(
               flex: 9,
               child: Text(
@@ -200,17 +238,15 @@ class _suggestionState extends State<suggestion> {
                 ),
               ),
             ),
+
+
             Expanded(
               flex: 1,
               child: Hero(
                   tag: 'quantity',
                   child: GestureDetector(
-                    onTap: (){
-                      Navigator.of(context).push(HeroDialogRoute(
-                        // moving to add_food carrying only food name
-                          builder: (context){return addfood(foodName: widget.foodName, selectedDate: widget.selectedDate,);},
-                          settings: RouteSettings())
-                      );
+                    onTap: ()async{
+                      addFoodMenu();
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -233,12 +269,52 @@ class _suggestionState extends State<suggestion> {
                   )
               ),
             ),
+
+
             Divider(
               thickness: 2.0,
               color: Colors.black,
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void addFoodMenu() async{
+    final result = await Navigator.of(context).push(HeroDialogRoute(
+      // moving to add_food carrying only food name
+        builder: (context){return addfood(foodName: widget.foodName, selectedDate: widget.selectedDate,);},
+        settings: RouteSettings())
+    );
+    widget.insertFood(result);
+  }
+
+}
+
+
+class Chipper extends StatefulWidget {
+  String name;
+  String weight;
+  Chipper({
+    required this.name,
+    required this.weight,
+    Key? key
+  }) : super(key: key);
+
+  @override
+  _ChipperState createState() => _ChipperState();
+}
+
+class _ChipperState extends State<Chipper> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+      child: Chip(
+        label: Text(widget.name + ' ' + widget.weight),
+        //delete functionality here
+        onDeleted: (){},
       ),
     );
   }

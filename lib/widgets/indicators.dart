@@ -285,6 +285,6 @@ class _indicatorsState extends State<indicators> {
         builder: (context){
           return searchfood(selectedDate: widget.selectedDate,);
         }, settings: RouteSettings()));
-    widget.rebuildHome(); print('value received');
+    widget.rebuildHome();
   }
 }
